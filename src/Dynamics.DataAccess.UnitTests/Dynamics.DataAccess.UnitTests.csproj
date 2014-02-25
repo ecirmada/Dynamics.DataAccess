@@ -57,7 +57,7 @@
     <Compile Include="BarEntity.cs" />
     <Compile Include="FooEntity.cs" />
     <Compile Include="TestEntity.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="RepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
