@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dynamics.DataAccess", "Dynamics.DataAccess\Dynamics.DataAccess.csproj", "{8304C6CD-8D9B-4D96-91AA-DF1C74881D9A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{DD464C1C-AFA1-49A2-8188-F43FD489147B}"
@@ -12,6 +14,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{DD464C1C-AFA
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dynamics.DataAccess.UnitTests", "Dynamics.DataAccess.UnitTests\Dynamics.DataAccess.UnitTests.csproj", "{A1201276-345C-4656-B86E-BFC652880CD9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{09E22B3D-850A-43F7-AD33-EE6DC8703867}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dynamics.Schema", "Dynamics.Schema\Dynamics.Schema.csproj", "{1FB206AF-0A39-43BD-B43D-5BECFCF1D027}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dynamics.Schema.UnitTests", "Dynamics.Schema.UnitTests\Dynamics.Schema.UnitTests.csproj", "{F9BF0AA4-7C91-465E-8E83-7DF9E9BC88F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dynamics.Schema.Example", "Dynamics.Schema.Example\Dynamics.Schema.Example.csproj", "{DA89693F-4A74-47AE-AE56-1C4F79B7AB26}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,8 +37,24 @@ Global
 		{A1201276-345C-4656-B86E-BFC652880CD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1201276-345C-4656-B86E-BFC652880CD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1201276-345C-4656-B86E-BFC652880CD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FB206AF-0A39-43BD-B43D-5BECFCF1D027}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FB206AF-0A39-43BD-B43D-5BECFCF1D027}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FB206AF-0A39-43BD-B43D-5BECFCF1D027}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FB206AF-0A39-43BD-B43D-5BECFCF1D027}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9BF0AA4-7C91-465E-8E83-7DF9E9BC88F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9BF0AA4-7C91-465E-8E83-7DF9E9BC88F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9BF0AA4-7C91-465E-8E83-7DF9E9BC88F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9BF0AA4-7C91-465E-8E83-7DF9E9BC88F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA89693F-4A74-47AE-AE56-1C4F79B7AB26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA89693F-4A74-47AE-AE56-1C4F79B7AB26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA89693F-4A74-47AE-AE56-1C4F79B7AB26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA89693F-4A74-47AE-AE56-1C4F79B7AB26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A1201276-345C-4656-B86E-BFC652880CD9} = {09E22B3D-850A-43F7-AD33-EE6DC8703867}
+		{F9BF0AA4-7C91-465E-8E83-7DF9E9BC88F9} = {09E22B3D-850A-43F7-AD33-EE6DC8703867}
 	EndGlobalSection
 EndGlobal
