@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Dynamics.Schema.UnitTests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("The FA")]
+[assembly: AssemblyCompany("Dynamics")]
 [assembly: AssemblyProduct("Dynamics.Schema.UnitTests")]
-[assembly: AssemblyCopyright("Copyright © The FA 2014")]
+[assembly: AssemblyCopyright("Copyright © Dynamics 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

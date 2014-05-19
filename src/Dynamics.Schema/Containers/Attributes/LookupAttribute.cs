@@ -1,11 +1,14 @@
 ﻿
 
+using System.Runtime.Serialization;
 using Dynamics.Schema.Extensions;
 
 namespace Dynamics.Schema.Containers.Attributes
 {
+    [DataContract(Namespace = "")]
     public class LookupAttribute : Attribute
     {
+        [DataMember]
         public string LookupRelation { get; set; }
         public override string ToString()
         {

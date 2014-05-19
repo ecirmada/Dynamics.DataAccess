@@ -4,9 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
 using System.Text.RegularExpressions;
 using Dynamics.Schema.Containers;
 using Dynamics.Schema.Containers.Attributes;
+using Dynamics.Schema.Extensions;
 using Dynamics.Schema.Translators;
 using Microsoft.Xrm.Sdk.Metadata;
 using Attribute = Dynamics.Schema.Containers.Attribute;
@@ -15,6 +18,7 @@ using Attribute = Dynamics.Schema.Containers.Attribute;
 
 namespace Dynamics.Schema
 {
+    [DataContract]
     public sealed class SchemaStorage
     {
 
@@ -42,7 +46,9 @@ namespace Dynamics.Schema
         }
         #endregion
 
+        [DataMember]
         public Dictionary<string, Entity> Entities { get; set; }
+        [DataMember]
         public Dictionary<string, OptionSet> OptionSets { get; set; }
 
 
@@ -98,7 +104,7 @@ namespace Dynamics.Schema
                 case AttributeTypeCode.Owner:
                 case AttributeTypeCode.Uniqueidentifier:
 
-                    attribute = new Attribute()
+                    attribute = new Attribute
                     {
                         Name = name,
                         CrmLogicalName = attributeMetadata.LogicalName,
@@ -110,7 +116,7 @@ namespace Dynamics.Schema
                     break;
                 case AttributeTypeCode.Lookup:
                     var targets = ((LookupAttributeMetadata)(attributeMetadata)).Targets;
-                    attribute = new LookupAttribute()
+                    attribute = new LookupAttribute
                     {
                         Name = name,
                         CrmLogicalName = attributeMetadata.LogicalName,
@@ -125,7 +131,7 @@ namespace Dynamics.Schema
                 case AttributeTypeCode.Status:
                 case AttributeTypeCode.Picklist:
                     var picklistName = ((EnumAttributeMetadata) (attributeMetadata)).OptionSet.Name;
-                    attribute = new PickListAttribute()
+                    attribute = new PickListAttribute
                     {
                         Name = name,
                         CrmLogicalName = attributeMetadata.LogicalName,
@@ -138,7 +144,7 @@ namespace Dynamics.Schema
                     };
                     break;
                 default:
-                    attribute = new Attribute()
+                    attribute = new Attribute
                     {
                         Name = name,
                         CrmLogicalName = attributeMetadata.LogicalName,
@@ -193,7 +199,7 @@ namespace Dynamics.Schema
 
             if (!OptionSets.ContainsKey(name))
             {
-                OptionSets.Add(name, new OptionSet()
+                OptionSets.Add(name, new OptionSet
                 {
                     Name = name,
                     CrmName = optionSet.Name,
@@ -240,7 +246,7 @@ namespace Dynamics.Schema
             // Check to make sure that the option set begins with a word character
             // or underscore.
             name = Regex.Replace(name, @"[^A-Za-z0-9_]", "");
-            var pattern = @"^[A-Za-z_][A-Za-z0-9_]*$";
+            const string pattern = @"^[A-Za-z_][A-Za-z0-9_]*$";
             if (!Regex.IsMatch(name, pattern))
             {
 
@@ -264,36 +270,47 @@ namespace Dynamics.Schema
             return optionName;
         }
 
-
-        public void ExportSchemas(string filename)
+        public void ExportSchemas(string filename, bool humanReadable=false)
         {
-            //Output the Entities schema
-            using (TextWriter output = new StreamWriter(string.Format("{0}.Entities.Schema",filename), false))
+            if (humanReadable)
             {
-                foreach (Entity entity in Entities.Values)
+                //Output the Entities schema
+                using (TextWriter output = new StreamWriter(string.Format("{0}.Entities.Schema", filename), false))
                 {
-                    output.WriteLine("----------------------");
-                    output.WriteLine(entity);
-                    output.WriteLine("----------------------");
-                    foreach (Attribute attribute in entity.Attributes.Values)
+                    foreach (Entity entity in Entities.Values)
                     {
-                        output.WriteLine(attribute);
+                        output.WriteLine("----------------------");
+                        output.WriteLine(entity);
+                        output.WriteLine("----------------------");
+                        foreach (Attribute attribute in entity.Attributes.Values)
+                        {
+                            output.WriteLine(attribute);
+                        }
+                    }
+                }
+
+                //Output the Option Set schema
+                using (TextWriter output = new StreamWriter(string.Format("{0}.Enums.Schema", filename), false))
+                {
+                    foreach (var optionSet in OptionSets.Values)
+                    {
+                        output.WriteLine("----------------------");
+                        output.WriteLine(optionSet);
+                        output.WriteLine("----------------------");
+                        foreach (var option in optionSet.Options.Values)
+                        {
+                            output.WriteLine(option);
+                        }
                     }
                 }
             }
-
-            //Output the Option Set schema
-            using (TextWriter output = new StreamWriter(string.Format("{0}.Enums.Schema",filename), false))
+            else
             {
-                foreach (var optionSet in OptionSets.Values)
+                using (var output = new StreamWriter(string.Format("{0}.Schema.xml", filename), false))
                 {
-                    output.WriteLine("----------------------");
-                    output.WriteLine(optionSet);
-                    output.WriteLine("----------------------");
-                    foreach (var option in optionSet.Options.Values)
-                    {
-                        output.WriteLine(option);
-                    }
+                    var serialiser = new DataContractSerializer(this.GetType());
+
+                    serialiser.WriteObject(output.BaseStream, this);
                 }
             }
         }

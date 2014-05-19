@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
@@ -8,7 +9,7 @@ namespace Dynamics.Schema.Example
 {
     public static class EntityExtractor
     {
-        public static EntityMetadata GetSchema( OrganizationServiceProxy serviceProxy, string entity)
+        public static EntityMetadata GetEntitySchema( OrganizationServiceProxy serviceProxy, string entity)
         {
             //var req = new RetrieveEntityRequest()
             var request = new RetrieveEntityRequest
@@ -37,6 +38,7 @@ namespace Dynamics.Schema.Example
             foreach (var metadata in response.EntityMetadata)
             {
                 SchemaStorage.Instance.AddEntity(metadata);
+                if (metadata.Attributes == null) continue;
                 foreach (var attribute in metadata.Attributes)
                 {
                     SchemaStorage.Instance.AddAttribute(metadata, attribute);
@@ -46,6 +48,24 @@ namespace Dynamics.Schema.Example
             return SchemaStorage.Instance.Entities;
         }
 
+        public static Dictionary<string, Entity> GetOptionSets(OrganizationServiceProxy serviceProxy)
+        {
+            //var req = new RetrieveEntityRequest()
+            var request = new RetrieveAllOptionSetsRequest();
+            var response = (RetrieveAllOptionSetsResponse)serviceProxy.Execute(request);
+
+            foreach (OptionSetMetadata metadata in response.OptionSetMetadata.Where(o => o.OptionSetType != OptionSetType.Boolean))
+            {
+                SchemaStorage.Instance.AddOptionSet(metadata);
+                if (!metadata.Options.Any()) continue;
+                foreach (var option in metadata.Options)
+                {
+                    SchemaStorage.Instance.AddOption(metadata, option);
+                }
+            }
+
+            return SchemaStorage.Instance.Entities;
+        }
 
     }
 }

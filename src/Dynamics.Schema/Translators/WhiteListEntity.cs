@@ -1,15 +1,21 @@
 ﻿using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using Dynamics.Schema.Extensions;
 
 namespace Dynamics.Schema.Translators
 {
+   [DataContract]
     public class WhiteListEntity
     {
+        [DataMember]
         public string OriginalName { get; set; }
+        [DataMember]
         public string Name { get; set; }
+        [DataMember]
         public List<CodeAttributeDeclaration> Properties { get; set; }
+        [DataMember]
         public bool IsPlaceholder { get; set; }
         public WhiteListEntity()
         {

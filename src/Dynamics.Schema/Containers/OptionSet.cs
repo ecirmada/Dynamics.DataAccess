@@ -1,6 +1,7 @@
 ﻿#region
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Dynamics.Schema.Extensions;
 using Dynamics.Schema.Translators;
 
@@ -8,13 +9,20 @@ using Dynamics.Schema.Translators;
 
 namespace Dynamics.Schema.Containers
 {
+    [DataContract(Namespace = "")]
     public class OptionSet
     {
+        [DataMember]
         public string Name { get; set; }
+        [DataMember]
         public bool IsGlobal { get; set; }
+        [DataMember]
         public string HostEntity { get; set; }
+        [DataMember]
         public Dictionary<string, Option> Options { get; set; }
+        [DataMember]
         public string CrmName { get; set; }
+        [DataMember]
         public WhiteListEntity WhiteList { get; set; }
 
         public OptionSet()
@@ -24,8 +32,8 @@ namespace Dynamics.Schema.Containers
 
         public override string ToString()
         {
-            return string.Format("{0}{2} (+{1} options)", Name.SupplimentIfDifferentTo(CrmName), Options.Count, 
-                IsGlobal?"*":string.Format("\t(entity={0})", HostEntity));
+            return string.Format("{0}{2} (+{1} options)", Name.SupplimentIfDifferentTo(CrmName), Options.Count,
+                IsGlobal ? "*" : string.Format("\t(entity={0})", HostEntity));
         }
     }
 }

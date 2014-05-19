@@ -1,11 +1,15 @@
-﻿using Dynamics.Schema.Extensions;
+﻿using System.Runtime.Serialization;
+using Dynamics.Schema.Extensions;
 
 namespace Dynamics.Schema.Containers.Attributes
 {
+    [DataContract(Namespace = "")]
     public class PickListAttribute : Attribute
     {
 
+        [DataMember]
         public string PickListName { get; set; }
+        [DataMember]
         public string PickListCrmName { get; set; }
 
         public override string ToString()
