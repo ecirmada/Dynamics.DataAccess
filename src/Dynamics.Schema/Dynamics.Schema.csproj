@@ -49,6 +49,7 @@
     <Compile Include="Containers\Entity.cs" />
     <Compile Include="Containers\OptionSet.cs" />
     <Compile Include="Containers\Option.cs" />
+    <Compile Include="EntityExtractor.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="SchemaStorage.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />

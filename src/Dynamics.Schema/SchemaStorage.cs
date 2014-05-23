@@ -1,28 +1,23 @@
-﻿#region
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Text.RegularExpressions;
 using Dynamics.Schema.Containers;
 using Dynamics.Schema.Containers.Attributes;
-using Dynamics.Schema.Extensions;
 using Dynamics.Schema.Translators;
 using Microsoft.Xrm.Sdk.Metadata;
 using Attribute = Dynamics.Schema.Containers.Attribute;
-
-#endregion
 
 namespace Dynamics.Schema
 {
     [DataContract]
     public sealed class SchemaStorage
     {
-
         #region Singlton stuff
+
         private static readonly SchemaStorage instance = new SchemaStorage();
 
         // Explicit static constructor to tell C# compiler
@@ -39,23 +34,22 @@ namespace Dynamics.Schema
 
         public static SchemaStorage Instance
         {
-            get
-            {
-                return instance;
-            }
+            get { return instance; }
         }
+
         #endregion
 
         [DataMember]
         public Dictionary<string, Entity> Entities { get; set; }
+
         [DataMember]
         public Dictionary<string, OptionSet> OptionSets { get; set; }
 
 
         public string AddEntity(EntityMetadata entityMetadata)
         {
-            var whitelist = EntityAttributeTranslator.Instance.TransformEntity(entityMetadata.SchemaName);
-            var name = whitelist.Name;
+            WhiteListEntity whitelist = EntityAttributeTranslator.Instance.TransformEntity(entityMetadata.SchemaName);
+            string name = whitelist.Name;
             if (!Entities.ContainsKey(name))
             {
                 Entities.Add(name, new Entity
@@ -65,16 +59,17 @@ namespace Dynamics.Schema
                     CrmLogicalName = entityMetadata.LogicalName,
                     WhiteList = (whitelist.IsPlaceholder ? null : whitelist)
                 }
-                );
+                    );
             }
             return name;
         }
 
         public string AddAttribute(EntityMetadata entityMetadata, AttributeMetadata attributeMetadata)
         {
-            var entity = AddEntity(entityMetadata);
-            var whitelist = EntityAttributeTranslator.Instance.TransformAttribute(entityMetadata.SchemaName, attributeMetadata.SchemaName);
-            var name = whitelist.Name;
+            string entity = AddEntity(entityMetadata);
+            WhiteListEntity whitelist = EntityAttributeTranslator.Instance.TransformAttribute(
+                entityMetadata.SchemaName, attributeMetadata.SchemaName);
+            string name = whitelist.Name;
             Attribute attribute = null;
             string description = null;
             if (attributeMetadata.Description != null && attributeMetadata.Description.UserLocalizedLabel != null)
@@ -83,7 +78,7 @@ namespace Dynamics.Schema
             }
             switch (attributeMetadata.AttributeType)
             {
-                //Unhandled attributes
+                    //Unhandled attributes
                 case null:
                     Console.Error.WriteLine("Unhandled Attribute of null");
                     break;
@@ -94,11 +89,12 @@ namespace Dynamics.Schema
                 case AttributeTypeCode.Virtual:
                 case AttributeTypeCode.ManagedProperty:
                 case AttributeTypeCode.EntityName:
-                    Console.Error.WriteLine("Unhandled Attribute: '{0}'", Enum.GetName(typeof(AttributeTypeCode), attributeMetadata.AttributeType));
+                    Console.Error.WriteLine("Unhandled Attribute: '{0}'",
+                        Enum.GetName(typeof (AttributeTypeCode), attributeMetadata.AttributeType));
 
                     break;
 
-                //Handled Attributes
+                    //Handled Attributes
                 case AttributeTypeCode.Memo:
                 case AttributeTypeCode.Money:
                 case AttributeTypeCode.Owner:
@@ -109,34 +105,35 @@ namespace Dynamics.Schema
                         Name = name,
                         CrmLogicalName = attributeMetadata.LogicalName,
                         CrmSchemaName = attributeMetadata.SchemaName,
-                        SchemaType = Enum.GetName(typeof(AttributeTypeCode), attributeMetadata.AttributeType),
+                        SchemaType = Enum.GetName(typeof (AttributeTypeCode), attributeMetadata.AttributeType),
                         Desc = (description ?? ""),
                         WhiteList = (whitelist.IsPlaceholder ? null : whitelist)
                     };
                     break;
                 case AttributeTypeCode.Lookup:
-                    var targets = ((LookupAttributeMetadata)(attributeMetadata)).Targets;
+                    string[] targets = ((LookupAttributeMetadata) (attributeMetadata)).Targets;
                     attribute = new LookupAttribute
                     {
                         Name = name,
                         CrmLogicalName = attributeMetadata.LogicalName,
                         CrmSchemaName = attributeMetadata.SchemaName,
-                        SchemaType = Enum.GetName(typeof(AttributeTypeCode), attributeMetadata.AttributeType),
+                        SchemaType = Enum.GetName(typeof (AttributeTypeCode), attributeMetadata.AttributeType),
                         Desc = (description ?? ""),
                         WhiteList = (whitelist.IsPlaceholder ? null : whitelist),
-                        LookupRelation = (targets != null && targets.Any() ? targets.Aggregate((a, b) => a + ", " + b) : "")
+                        LookupRelation =
+                            (targets != null && targets.Any() ? targets.Aggregate((a, b) => a + ", " + b) : "")
                     };
                     break;
                 case AttributeTypeCode.State:
                 case AttributeTypeCode.Status:
                 case AttributeTypeCode.Picklist:
-                    var picklistName = ((EnumAttributeMetadata) (attributeMetadata)).OptionSet.Name;
+                    string picklistName = ((EnumAttributeMetadata) (attributeMetadata)).OptionSet.Name;
                     attribute = new PickListAttribute
                     {
                         Name = name,
                         CrmLogicalName = attributeMetadata.LogicalName,
                         CrmSchemaName = attributeMetadata.SchemaName,
-                        SchemaType = Enum.GetName(typeof(AttributeTypeCode), attributeMetadata.AttributeType),
+                        SchemaType = Enum.GetName(typeof (AttributeTypeCode), attributeMetadata.AttributeType),
                         Desc = (description ?? ""),
                         WhiteList = (whitelist.IsPlaceholder ? null : whitelist),
                         PickListName = OptionSetOptionTranslator.Instance.TransformOptionSet(picklistName).Name,
@@ -149,7 +146,7 @@ namespace Dynamics.Schema
                         Name = name,
                         CrmLogicalName = attributeMetadata.LogicalName,
                         CrmSchemaName = attributeMetadata.SchemaName,
-                        SchemaType = Enum.GetName(typeof(AttributeTypeCode), attributeMetadata.AttributeType),
+                        SchemaType = Enum.GetName(typeof (AttributeTypeCode), attributeMetadata.AttributeType),
                         Desc = (description ?? ""),
                         WhiteList = (whitelist.IsPlaceholder ? null : whitelist)
                     };
@@ -162,27 +159,25 @@ namespace Dynamics.Schema
             }
 
             return name;
-
-
         }
 
         public string AddOptionSet(OptionSetMetadataBase optionSet, EntityMetadata entityMetadata = null)
         {
-            var whitelist = OptionSetOptionTranslator.Instance.TransformOptionSet(optionSet.Name);
-            var name = whitelist.Name;
-            var isglobal = optionSet.IsGlobal.HasValue && optionSet.IsGlobal.Value;
-            var hostentity = "";
+            WhiteListEntity whitelist = OptionSetOptionTranslator.Instance.TransformOptionSet(optionSet.Name);
+            string name = whitelist.Name;
+            bool isglobal = optionSet.IsGlobal.HasValue && optionSet.IsGlobal.Value;
+            string hostentity = "";
             if (entityMetadata != null)
             {
                 if (!isglobal)
                 {
                     // Find the attribute which uses the specified OptionSet.
-                    var attribute =
+                    AttributeMetadata attribute =
                         (from a in entityMetadata.Attributes
-                         where a.AttributeType == AttributeTypeCode.Picklist
-                               && ((EnumAttributeMetadata)a).OptionSet.MetadataId
-                               == optionSet.MetadataId
-                         select a).FirstOrDefault();
+                            where a.AttributeType == AttributeTypeCode.Picklist
+                                  && ((EnumAttributeMetadata) a).OptionSet.MetadataId
+                                  == optionSet.MetadataId
+                            select a).FirstOrDefault();
 
                     // Check for null, since statuscode attributes on custom entities are not
                     // global, but their optionsets are not included in the attribute
@@ -193,7 +188,6 @@ namespace Dynamics.Schema
                         // together to form the OptionSet name.
                         hostentity = String.Format("{0}.{1}", entityMetadata.SchemaName, attribute.SchemaName);
                     }
-
                 }
             }
 
@@ -206,7 +200,6 @@ namespace Dynamics.Schema
                     IsGlobal = isglobal,
                     HostEntity = hostentity,
                     WhiteList = (whitelist.IsPlaceholder ? null : whitelist)
-
                 });
             }
             return name;
@@ -214,10 +207,11 @@ namespace Dynamics.Schema
 
         public string AddOption(OptionSetMetadataBase optionSetMetadata, OptionMetadata optionMetadata)
         {
-            var optionSetName = AddOptionSet(optionSetMetadata);
+            string optionSetName = AddOptionSet(optionSetMetadata);
 
-            var whitelist = OptionSetOptionTranslator.Instance.TransformOption(optionSetMetadata.Name, optionMetadata.Label.UserLocalizedLabel.Label);
-            var optionName = whitelist.Name;
+            WhiteListEntity whitelist = OptionSetOptionTranslator.Instance.TransformOption(optionSetMetadata.Name,
+                optionMetadata.Label.UserLocalizedLabel.Label);
+            string optionName = whitelist.Name;
 
             optionName = EnsureValidIdentifier(optionName);
             optionName = EnsureUniqueOption(optionSetName, optionName);
@@ -237,9 +231,9 @@ namespace Dynamics.Schema
         }
 
         /// <summary>
-        /// Checks to make sure that the name begins with a valid character. If the name
-        /// does not begin with a valid character, then add an underscore to the
-        /// beginning of the name.
+        ///     Checks to make sure that the name begins with a valid character. If the name
+        ///     does not begin with a valid character, then add an underscore to the
+        ///     beginning of the name.
         /// </summary>
         private static String EnsureValidIdentifier(String name)
         {
@@ -249,7 +243,6 @@ namespace Dynamics.Schema
             const string pattern = @"^[A-Za-z_][A-Za-z0-9_]*$";
             if (!Regex.IsMatch(name, pattern))
             {
-
                 // Prepend an underscore to the name if it is not valid.
                 name = String.Format("_{0}", name);
                 // Trace.TraceInformation(String.Format("Name of the option changed to {0}", name));
@@ -270,7 +263,7 @@ namespace Dynamics.Schema
             return optionName;
         }
 
-        public void ExportSchemas(string filename, bool humanReadable=false)
+        public void ExportSchemas(string filename, bool humanReadable = false)
         {
             if (humanReadable)
             {
@@ -292,12 +285,12 @@ namespace Dynamics.Schema
                 //Output the Option Set schema
                 using (TextWriter output = new StreamWriter(string.Format("{0}.Enums.Schema", filename), false))
                 {
-                    foreach (var optionSet in OptionSets.Values)
+                    foreach (OptionSet optionSet in OptionSets.Values)
                     {
                         output.WriteLine("----------------------");
                         output.WriteLine(optionSet);
                         output.WriteLine("----------------------");
-                        foreach (var option in optionSet.Options.Values)
+                        foreach (Option option in optionSet.Options.Values)
                         {
                             output.WriteLine(option);
                         }
@@ -308,7 +301,7 @@ namespace Dynamics.Schema
             {
                 using (var output = new StreamWriter(string.Format("{0}.Schema.xml", filename), false))
                 {
-                    var serialiser = new DataContractSerializer(this.GetType());
+                    var serialiser = new DataContractSerializer(GetType());
 
                     serialiser.WriteObject(output.BaseStream, this);
                 }

@@ -20,7 +20,8 @@ namespace Dynamics.Schema.Example
 
             //var entities = EntityExtractor.GetEntities(service,true);
             var optionsets = EntityExtractor.GetOptionSets(service);
-            SchemaStorage.Instance.ExportSchemas("test");
+            var entities = EntityExtractor.GetEntities(service,true);
+            SchemaStorage.Instance.ExportSchemas("test", true);
             //(SchemaStorage.Instance.ExportSchemas("proxy"));
 
         }

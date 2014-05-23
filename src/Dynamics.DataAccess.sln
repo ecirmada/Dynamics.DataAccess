@@ -7,7 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dynamics.DataAccess", "Dyna
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{DD464C1C-AFA1-49A2-8188-F43FD489147B}"
 	ProjectSection(SolutionItems) = preProject
-		..\lib\crmsvcutil.exe = ..\lib\crmsvcutil.exe
 		..\lib\microsoft.crm.sdk.proxy.dll = ..\lib\microsoft.crm.sdk.proxy.dll
 		..\lib\microsoft.xrm.client.dll = ..\lib\microsoft.xrm.client.dll
 		..\lib\microsoft.xrm.sdk.dll = ..\lib\microsoft.xrm.sdk.dll
@@ -22,6 +21,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dynamics.Schema.UnitTests", "Dynamics.Schema.UnitTests\Dynamics.Schema.UnitTests.csproj", "{F9BF0AA4-7C91-465E-8E83-7DF9E9BC88F9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dynamics.Schema.Example", "Dynamics.Schema.Example\Dynamics.Schema.Example.csproj", "{DA89693F-4A74-47AE-AE56-1C4F79B7AB26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dynamics.EntityGenerator", "Dynamics.EntityGenerator\Dynamics.EntityGenerator.csproj", "{46EFBF6F-4B50-4998-9B00-A0DD959276C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +50,10 @@ Global
 		{DA89693F-4A74-47AE-AE56-1C4F79B7AB26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA89693F-4A74-47AE-AE56-1C4F79B7AB26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA89693F-4A74-47AE-AE56-1C4F79B7AB26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46EFBF6F-4B50-4998-9B00-A0DD959276C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46EFBF6F-4B50-4998-9B00-A0DD959276C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46EFBF6F-4B50-4998-9B00-A0DD959276C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46EFBF6F-4B50-4998-9B00-A0DD959276C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
